@@ -12,6 +12,8 @@ weds-Feedbackpage
 Their Output:
 
 <img width="493" height="547" alt="image" src="https://github.com/user-attachments/assets/d7d07825-3219-4fd0-8176-202841b9de47" />
+
 The hall manager shortly shared a details.
+
                              ***Wedding Hall Manager Contact shortly***
                           
