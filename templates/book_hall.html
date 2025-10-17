@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Book a Hall{% endblock %}
+{% block content %}
+<div class="book-hall-form book-hall-form--expanded">
+  <h2>Book a Hall</h2>
+  <div class="form-section">
+    <h1>Booking Details</h1>
+    <p class="booking-desc">Fill in your details below to reserve your wedding hall and catering. Our team will contact you for confirmation and customization. All fields are required for a smooth booking experience.</p>
+    <form id="booking-form" method="post" action="{% url 'book_hall' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" placeholder="+91..." required>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+            <label for="guests">How many guests?</label>
+            <select id="guests" name="guests">
+                <option>50</option>
+                <option>100</option>
+                <option>150</option>
+                <option>200+</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Booking Date</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+            <label for="days">How many days?</label>
+            <select id="days" name="days">
+                <option>1 Day</option>
+                <option>2 Days</option>
+                <option>3 Days</option>
+                <option>Full Week</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="food_items">Food items <span style="font-weight:400;color:#ccc">(select from Menu or list the dishes)</span></label>
+            <!-- Visible chips container for nicer display -->
+            <div id="food-chips" aria-hidden="false" style="min-height:48px;margin-bottom:12px"></div>
+            <!-- Keep textarea for form submission but visually smaller/less prominent -->
+            <textarea id="food_items" name="food_items" rows="4" placeholder="e.g. Veg Thali, Paneer Tikka, Biryani" style="font-size:13px">{{ food_items|default:'' }}</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="book-btn">BOOK NOW</button>
+        </div>
+    </form>
+    <div class="booking-note">
+      <span style="color:var(--accent);font-weight:600">Note:</span> You can select your menu from the Menu page and it will be auto-filled here if you add items to your cart.
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script>
+    // Prefill food_items field with items from localStorage cart
+    function loadCart(){
+        try{ return JSON.parse(localStorage.getItem('weds_cart')||'[]'); }catch(e){return []}
+    }
+    function clearCart(){ localStorage.removeItem('weds_cart'); }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+            const textarea = document.getElementById('food_items');
+            const chipsContainer = document.getElementById('food-chips');
+            // food_cart may be injected by server (JSON) when using ?cart=... fallback
+            let injected = [];
+            // inject server-provided cart JSON safely
+            const __injected_json = '{{ food_cart|default:"[]"|escapejs }}';
+            try{ injected = JSON.parse(__injected_json || '[]'); }catch(e){ injected = []; }
+
+            const cart = loadCart();
+            const effective = (cart && cart.length) ? cart : injected;
+
+            function renderChips(list){
+                chipsContainer.innerHTML = '';
+                if(!list || !list.length){
+                    chipsContainer.innerHTML = '<div class="chip-empty">No items selected — pick from the Menu</div>';
+                    return;
+                }
+                list.forEach((it, idx) => {
+                    let title = '';
+                    let subtitle = '';
+                    if(typeof it === 'string'){
+                        title = it;
+                    }else if(typeof it === 'object'){
+                        title = it.name || 'Item';
+                        subtitle = (it.items && it.items.length) ? it.items.join(', ') : '';
+                    }
+                    const chip = document.createElement('div');
+                    chip.className = 'food-chip';
+                    chip.innerHTML = `<div class="food-chip-title">${title}</div>${subtitle?`<div class="food-chip-sub">${subtitle}</div>`:''}<button type="button" class="chip-remove" data-idx="${idx}" aria-label="Remove item">×</button>`;
+                    chipsContainer.appendChild(chip);
+                });
+            }
+
+            function toTextarea(list){
+                if(!list || !list.length) return '';
+                return list.map(it => typeof it === 'string' ? it : `${it.name}: ${it.items ? it.items.join(', ') : ''}`).join('\n');
+            }
+
+            // Render on load
+            renderChips(effective);
+            textarea.value = toTextarea(effective);
+
+            // Click handler for removing chips (updates localStorage + textarea)
+            chipsContainer.addEventListener('click', (ev)=>{
+                if(ev.target.classList.contains('chip-remove')){
+                    const idx = Number(ev.target.dataset.idx);
+                    // remove from stored cart if present
+                    let cur = loadCart();
+                    if(cur && cur.length){
+                        cur.splice(idx,1);
+                        localStorage.setItem('weds_cart', JSON.stringify(cur));
+                        renderChips(cur);
+                        textarea.value = toTextarea(cur);
+                        return;
+                    }
+                    // otherwise operate on injected list
+                    if(injected && injected.length){
+                        injected.splice(idx,1);
+                        renderChips(injected);
+                        textarea.value = toTextarea(injected);
+                    }
+                }
+            });
+
+        // On submit, ensure textarea contains the latest cart; after submit, clear cart
+        const form = document.getElementById('booking-form');
+        form.addEventListener('submit', ()=>{
+            const current = loadCart();
+            if(current && current.length){
+                textarea.value = toTextarea(current);
+            }
+            // Clear localStorage cart AFTER a short delay so that the POST can be submitted
+            setTimeout(()=>{ clearCart(); }, 500);
+        });
+    });
+</script>

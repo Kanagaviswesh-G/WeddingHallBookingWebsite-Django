@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+
+<section id="menu" class="menu-page">
+    
+
+    <!-- Background video (place your file at static/videos/dishes.mp4) -->
+    <div class="menu-video" aria-hidden="true">
+        <video autoplay muted loop playsinline preload="auto" poster="{% static 'images/dishes-poster.jpg' %}">
+            <source src="{% static 'videos/dishes.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+    <div class="menu-overlay"></div>
+
+    <div class="menu-container">
+    <h2 class="page-title">Our Menu</h2>
+
+    <!-- Main Tabs -->
+    <div class="tabs">
+        <div class="tab active" data-meal="breakfast" onclick="showMain(this,'breakfast')">Breakfast</div>
+        <div class="tab" data-meal="lunch" onclick="showMain(this,'lunch')">Lunch</div>
+        <div class="tab" data-meal="dinner" onclick="showMain(this,'dinner')">Dinner</div>
+    </div>
+
+    <!-- ================= BREAKFAST ================= -->
+    <div id="breakfast" class="main-section active">
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="showSub(this,'north')">North Indian</div>
+            <div class="sub-tab" onclick="showSub(this,'western')">Western</div>
+            <div class="sub-tab" onclick="showSub(this,'south')">South Indian</div>
+        </div>
+
+        <div id="north" class="sub-section active">
+            <div class="combo-card">
+                <h3>North Indian Breakfast</h3>
+                <p>Paratha, Chole, Curd, Pickle</p>
+                <button class="add-to-cart" data-name="North Indian Breakfast" data-items="Paratha,Chole,Curd,Pickle">Add to cart</button>
+            </div>
+        </div>
+        <div id="western" class="sub-section">
+            <div class="combo-card">
+                <h3>Western Breakfast</h3>
+                <p>Bread, Butter, Eggs, Sausages, Juice</p>
+                <button class="add-to-cart" data-name="Western Breakfast" data-items="Bread,Butter,Eggs,Sausages,Juice">Add to cart</button>
+            </div>
+        </div>
+        <div id="south" class="sub-section">
+            <div class="combo-card">
+                <h3>South Indian Breakfast</h3>
+                <p>Idli, Dosa, Vada, Sambar, Chutney</p>
+                <button class="add-to-cart" data-name="South Indian Breakfast" data-items="Idli,Dosa,Vada,Sambar,Chutney">Add to cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= LUNCH ================= -->
+    <div id="lunch" class="main-section">
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="showSub(this,'vegthali')">Veg Thali</div>
+            <div class="sub-tab" onclick="showSub(this,'nonvegthali')">Non-Veg Thali</div>
+        </div>
+
+        <div id="vegthali" class="sub-section active">
+                <div class="combo-card">
+                <h3>Veg Thali</h3>
+                <p>Rice, Dal, Chapati, Veg Curry, Curd</p>
+                <button class="add-to-cart" data-name="Veg Thali" data-items="Rice,Dal,Chapati,Veg Curry,Curd">Add to cart</button>
+            </div>
+        </div>
+        <div id="nonvegthali" class="sub-section">
+                <div class="combo-card">
+                <h3>Non-Veg Thali</h3>
+                <p>Rice, Chicken Curry, Fish Fry, Chapati</p>
+                <button class="add-to-cart" data-name="Non-Veg Thali" data-items="Rice,Chicken Curry,Fish Fry,Chapati">Add to cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DINNER ================= -->
+    <div id="dinner" class="main-section">
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="showSub(this,'light')">Light Dinner</div>
+            <div class="sub-tab" onclick="showSub(this,'starters')">Starters</div>
+            <div class="sub-tab" onclick="showSub(this,'special')">Special Dinner</div>
+        </div>
+
+        <div id="light" class="sub-section active">
+                <div class="combo-card">
+                <h3>Light Dinner Combo</h3>
+                <p>Chapati, Sabzi, Soup</p>
+                <button class="add-to-cart" data-name="Light Dinner Combo" data-items="Chapati,Sabzi,Soup">Add to cart</button>
+            </div>
+        </div>
+        <div id="starters" class="sub-section">
+                <div class="combo-card">
+                <h3>Dinner Starters</h3>
+                <p>Paneer Tikka, Chicken Kebab, Veg Cutlet</p>
+                <button class="add-to-cart" data-name="Dinner Starters" data-items="Paneer Tikka,Chicken Kebab,Veg Cutlet">Add to cart</button>
+            </div>
+        </div>
+        <div id="special" class="sub-section">
+                <div class="combo-card">
+                <h3>Special Dinner</h3>
+                <p>Biryani, Raita, Chicken Curry, Gulab Jamun</p>
+                <button class="add-to-cart" data-name="Special Dinner" data-items="Biryani,Raita,Chicken Curry,Gulab Jamun">Add to cart</button>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Cart widget (client-side only) -->
+<div id="cart-widget" class="cart-widget" aria-live="polite">
+    <div class="cart-header">
+        <div class="title">Cart</div>
+        <div class="count" id="cart-count">0</div>
+    </div>
+    <ul id="cart-items" class="cart-items" aria-hidden="false"></ul>
+    <div id="cart-empty" class="cart-empty" style="display:none">Your cart is empty</div>
+    <div class="cart-actions">
+        <a id="checkout-btn" href="{% url 'book_hall' %}" class="btn-checkout">Proceed to Book</a>
+        <button id="clear-cart" class="btn-clear">Clear</button>
+    </div>
+</div>
+
+<script>
+function showMain(el, id) {
+    // el is the clicked tab element
+    // Hide all main sections and show selected
+    document.querySelectorAll('.main-section').forEach(s => s.classList.remove('active'));
+    const section = document.getElementById(id);
+    if(section) section.classList.add('active');
+
+    // Update tab active state
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    if(el && el.classList) el.classList.add('active');
+
+    // Ensure the first sub-tab and its sub-section are active for this section
+    const firstSub = section ? section.querySelector('.sub-tab') : null;
+    if(section && firstSub){
+        section.querySelectorAll('.sub-section').forEach(sec => sec.classList.remove('active'));
+        const firstSubSection = section.querySelector('.sub-section');
+        if(firstSubSection) firstSubSection.classList.add('active');
+        section.querySelectorAll('.sub-tab').forEach(st => st.classList.remove('active'));
+        firstSub.classList.add('active');
+    }
+}
+
+function showSub(el, id) {
+    // el is the clicked sub-tab element; find its parent main-section container
+    const parentSection = el ? el.closest('.main-section') : null;
+    if(!parentSection) return;
+
+    parentSection.querySelectorAll('.sub-section').forEach(sec => sec.classList.remove('active'));
+    const target = parentSection.querySelector('#'+id);
+    if(target) target.classList.add('active');
+
+    parentSection.querySelectorAll('.sub-tab').forEach(st => st.classList.remove('active'));
+    if(el && el.classList) el.classList.add('active');
+}
+// ---------------- Cart functionality ----------------
+function loadCart(){
+    try{ return JSON.parse(localStorage.getItem('weds_cart')||'[]'); }catch(e){return []}
+}
+function saveCart(cart){ localStorage.setItem('weds_cart', JSON.stringify(cart)); }
+function updateCartUI(){
+    const cart = loadCart();
+    const countEl = document.getElementById('cart-count');
+    const list = document.getElementById('cart-items');
+    const empty = document.getElementById('cart-empty');
+    countEl.innerText = cart.length;
+    list.innerHTML = '';
+    if(!cart.length){
+        empty.style.display = 'block';
+        list.setAttribute('aria-hidden','true');
+    } else {
+        empty.style.display = 'none';
+        list.setAttribute('aria-hidden','false');
+    }
+    cart.forEach((it, idx)=>{
+        const li = document.createElement('li');
+        li.className = 'cart-item';
+        // it may be a string (legacy) or object {name, items}
+        const display = typeof it === 'string' ? it : `${it.name} — ${it.items.join(', ')}`;
+        li.innerHTML = `<span class="name">${display}</span><button data-idx="${idx}" class="remove-item remove" aria-label="Remove ${display}">✕</button>`;
+        list.appendChild(li);
+    });
+    // update checkout link with serialized cart as query param so book_hall can prefill if user follows link
+    const checkout = document.getElementById('checkout-btn');
+    if(checkout){
+        const base = checkout.getAttribute('href').split('?')[0];
+        if(cart && cart.length){
+            // serialize structured cart as JSON and encode
+            const simple = cart.map(it => typeof it === 'string' ? {name:it, items:[]} : it);
+            const q = encodeURIComponent(JSON.stringify(simple));
+            checkout.setAttribute('href', `${base}?cart=${q}`);
+        } else {
+            checkout.setAttribute('href', base);
+        }
+    }
+}
+function addToCart(name){
+    const cart = loadCart();
+    // find data-items attribute from the clicked button
+    const btn = event.currentTarget || event.target;
+    let items = [];
+    try{ items = (btn.dataset.items || '').split(',').map(s=>s.trim()).filter(Boolean); }catch(e){items=[]}
+    const obj = { name: name, items: items };
+    cart.push(obj);
+    saveCart(cart);
+    updateCartUI();
+}
+function removeFromCart(idx){
+    const cart = loadCart();
+    cart.splice(idx,1);
+    saveCart(cart);
+    updateCartUI();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    updateCartUI();
+    document.querySelectorAll('.add-to-cart').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+            const name = btn.dataset.name || btn.closest('.combo-card').querySelector('h3').innerText;
+            addToCart(name);
+            btn.innerText = 'Added';
+            // cart pop animation
+            const cw = document.getElementById('cart-widget');
+            if(cw){ cw.classList.add('animate-pop'); setTimeout(()=>cw.classList.remove('animate-pop'), 700); }
+            setTimeout(()=> btn.innerText = 'Add to cart', 1200);
+        });
+    });
+
+    document.getElementById('cart-items').addEventListener('click', e=>{
+        if(e.target.classList.contains('remove-item')){
+            const idx = parseInt(e.target.dataset.idx,10);
+            removeFromCart(idx);
+        }
+    });
+
+    document.getElementById('clear-cart').addEventListener('click', ()=>{
+        localStorage.removeItem('weds_cart'); updateCartUI();
+    });
+
+    // animate visible combo-cards on load
+    document.querySelectorAll('.main-section.active .combo-card, .sub-section.active .combo-card').forEach((c,i)=>{
+        c.classList.add('animate-in');
+        setTimeout(()=> c.classList.remove('animate-in'), 900 + (i*60));
+    });
+
+    // when switching mains or subs, animate their combo-cards
+    const origShowMain = window.showMain;
+    window.showMain = function(el, id){
+        origShowMain(el,id);
+        const section = document.getElementById(id);
+        if(!section) return;
+        section.querySelectorAll('.combo-card').forEach((c, idx)=>{
+            c.classList.add('animate-in');
+            setTimeout(()=> c.classList.remove('animate-in'), 900 + (idx*60));
+        });
+    }
+
+    const origShowSub = window.showSub;
+    window.showSub = function(el, id){
+        origShowSub(el,id);
+        const parent = el.closest('.main-section');
+        const target = parent ? parent.querySelector('#'+id) : null;
+        if(!target) return;
+        target.querySelectorAll('.combo-card').forEach((c, idx)=>{
+            c.classList.add('animate-in');
+            setTimeout(()=> c.classList.remove('animate-in'), 900 + (idx*60));
+        });
+    }
+});
+</script>
+</script>
+
+{% endblock %}
+
+</div>

@@ -1,0 +1,202 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and HTML */
+html, body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #000000, #1c1c1c);
+    color: white;
+    scroll-behavior: smooth;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, #000000, #2c2c2c);
+    padding: 15px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+}
+
+.brand {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 32px;
+    color: white;
+}
+
+.menu a {
+    margin: 0 15px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.menu a.active {
+    color: #ffcc00;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+}
+
+.username {
+    background-color: peachpuff;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Hero Sections */
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-family: 'Brush Script MT', cursive;
+    font-size: 50px;
+    color: #ffcc00;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #ccc;
+    max-width: 700px;
+    margin: 10px auto;
+    line-height: 1.6;
+}
+
+/* Section Titles */
+section h2 {
+    text-align: center;
+    font-size: 36px;
+    color: #ffcc00;
+    margin-bottom: 40px;
+}
+
+/* Cards / Combos */
+.combo, .service-card, .venue-card, .value-card, .step-card {
+    background-color: #1c1c1c;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.combo h3, .service-card h3, .venue-card h3, .value-card h3, .step-card h3 {
+    color: #ffcc00;
+    margin-bottom: 10px;
+}
+
+.combo p, .service-card p, .venue-card p, .value-card p, .step-card p {
+    color: #ccc;
+}
+
+/* Tabs (Menu Page) */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.tab {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tab:hover, .tab.active {
+    background-color: #ffcc00;
+    color: black;
+}
+
+.combo-section {
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.combo-section.active {
+    display: block;
+}
+
+/* Forms (Feedback / Book Hall) */
+form input, form textarea, form select, form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: none;
+}
+
+form button {
+    background-color: #ffcc00;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: #111;
+    padding: 50px 40px;
+    border-top: 2px solid #ffcc00;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 250px;
+    margin: 20px;
+}
+
+.footer-column h3 {
+    font-family: 'Brush Script MT', cursive;
+    color: #ffcc00;
+    font-size: 24px;
+    margin-bottom: 18px;
+}
+
+.footer-column p {
+    color: #ccc;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 20px;
+    background-color: #000;
+    font-size: 14px;
+    color: #888;
+}
