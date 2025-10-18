@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-n7m3@4)4wp3gh(xh^cxzff8u0_n8=oyt+%x6s*_h$+fabnio(6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['weddinghallbookingwebsite-django.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    '*.onrender.com',  # All Render domains
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
